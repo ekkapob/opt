@@ -19,6 +19,7 @@ defmodule Opt.Router do
     get "/", PageController, :index
     resources "/courses", CourseController
     resources "/users", UserController
+    resources "/sessions", SessionController, only: [:new]
   end
 
   # Other scopes may use custom stacks.

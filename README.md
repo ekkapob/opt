@@ -19,5 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> Let’s write a test for the comeonin call. We’ll make it a little less
-specific; we just want to verify the encryption.
+-> Let’s give it a real form. Create web
