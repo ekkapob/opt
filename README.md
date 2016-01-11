@@ -19,4 +19,5 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> Our model tests should be right back to passing!...
+-> Let’s write a test for the comeonin call. We’ll make it a little less
+specific; we just want to verify the encryption.

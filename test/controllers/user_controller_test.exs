@@ -2,7 +2,16 @@ defmodule Opt.UserControllerTest do
   use Opt.ConnCase
 
   alias Opt.User
-  @valid_attrs %{email: "some content", password_digest: "some content", username: "some content"}
+  @valid_create_attrs %{
+    email: "some content",
+    password: "some content",
+    password_confirmation: "some content",
+    username: "some content"
+  }
+  @valid_attrs %{
+    email: "some content",
+    username: "some content"
+  }
   @invalid_attrs %{}
 
   setup do
@@ -21,7 +30,7 @@ defmodule Opt.UserControllerTest do
   end
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), user: @valid_attrs
+    conn = post conn, user_path(conn, :create), user: @valid_create_attrs
     assert redirected_to(conn) == user_path(conn, :index)
     assert Repo.get_by(User, @valid_attrs)
   end
@@ -51,7 +60,7 @@ defmodule Opt.UserControllerTest do
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
     user = Repo.insert! %User{}
-    conn = put conn, user_path(conn, :update, user), user: @valid_attrs
+    conn = put conn, user_path(conn, :update, user), user: @valid_create_attrs
     assert redirected_to(conn) == user_path(conn, :show, user)
     assert Repo.get_by(User, @valid_attrs)
   end
@@ -67,5 +76,10 @@ defmodule Opt.UserControllerTest do
     conn = delete conn, user_path(conn, :delete, user)
     assert redirected_to(conn) == user_path(conn, :index)
     refute Repo.get(User, user.id)
+  end
+
+  test "password_digest value gets set to hash" do
+    changeset = User.changeset(%User{}, @valid_attrs)
+    assert Ecto.Changeset.get_change(changeset, :password_digest) == "ABCDE"
   end
 end
