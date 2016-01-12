@@ -10,10 +10,16 @@ defmodule Opt.SessionController do
     render conn, "new.html", changeset: changeset
   end
 
-  def create(conn, %{"user" => user_params}) do
-    user = Repo.get_by(User, username: user_params["username"])
+  def create(conn, %{"user" => %{"username" => username},
+    "password" => password}) when not is_nil(username) and
+    not is_nil(password) do
+    user = Repo.get_by(User, username: username)
     user
-    |> sign_in(user_params["password"], conn)
+    |> sign_in(password, conn)
+  end
+
+  def create(conn, _params) do
+    failed_login(conn)
   end
 
   def sign_in(user, password, conn) when is_nil(user) do

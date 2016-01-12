@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> We need to write some specs for this controller, as well. We’ll create test/controllers/session_controller_test.exs and fill it with the following:
+-> We replace the params argument in the second create function with an underscore since we do not need to use the results from it anywhere. 
