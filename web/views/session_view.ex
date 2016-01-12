@@ -1,3 +1,3 @@
-defmodule Opt.SessioonView do
+defmodule Opt.SessionView do
   use Opt.Web, :view
 end
