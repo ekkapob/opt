@@ -4,6 +4,7 @@ defmodule Opt.Course do
   schema "courses" do
     field :title, :string
     field :body, :string
+    belongs_to :user, Opt.User
 
     timestamps
   end

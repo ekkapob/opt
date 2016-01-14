@@ -22,23 +22,26 @@ defmodule Opt.SessionController do
     failed_login(conn)
   end
 
-  def sign_in(user, password, conn) when is_nil(user) do
+  defp failed_login(conn) do
     conn
+    |> put_session(:current_user, nil)
     |> put_flash(:error, "Either username or password is invalid!")
     |> redirect(to: page_path(conn, :index))
+    |> halt()
   end
 
-  def sign_in(user, password, conn) do
+  defp sign_in(user, _password, conn) when is_nil(user) do
+    failed_login(conn)
+  end
+
+  defp sign_in(user, password, conn) do
     if checkpw(password, user.password_digest) do
       conn
       |> put_session(:current_user, %{id: user.id, username: user.username})
       |> put_flash(:info, "Sign in successful!")
       |> redirect(to: page_path(conn, :index))
     else
-      conn
-      |> put_session(:current_user, nil)
-      |> put_flash(:error, "Either username or password is invalid!")
-      |> redirect(to: page_path(conn, :index))
+      failed_login(conn)
     end
   end
 end

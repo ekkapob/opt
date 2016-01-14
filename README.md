@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> We replace the params argument in the second create function with an underscore since we do not need to use the results from it anywhere. 
+-> Notice that the third argument changes to the top level of our nested resource, and each additional resource follows in order. 

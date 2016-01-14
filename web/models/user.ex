@@ -6,6 +6,7 @@ defmodule Opt.User do
     field :username, :string
     field :email, :string
     field :password_digest, :string
+    has_many :courses, Opt.Course
 
     timestamps
 

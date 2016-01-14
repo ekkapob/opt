@@ -17,8 +17,10 @@ defmodule Opt.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    resources "/courses", CourseController
-    resources "/users", UserController
+    # resources "/courses", CourseController
+    resources "/users", UserController do
+      resources "/courses", CourseController
+    end
     resources "/sessions", SessionController, only: [:new, :create]
   end
 
