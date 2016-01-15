@@ -14,5 +14,5 @@
 
 </ul>
 
-<%= link "Edit", to: course_path(@conn, :edit, @course) %>
-<%= link "Back", to: course_path(@conn, :index) %>
+<%= link "Edit", to: user_course_path(@conn, :edit, @user, @course) %>
+<%= link "Back", to: user_course_path(@conn, :index, @user) %>

@@ -16,13 +16,13 @@
       <td><%= course.body %></td>
 
       <td class="text-right">
-        <%= link "Show", to: course_path(@conn, :show, course), class: "btn btn-default btn-xs" %>
-        <%= link "Edit", to: course_path(@conn, :edit, course), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: course_path(@conn, :delete, course), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        <%= link "Show", to: user_course_path(@conn, :show, @user, course), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: user_course_path(@conn, :edit, @user, course), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: user_course_path(@conn, :delete, @user, course), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<%= link "New course", to: course_path(@conn, :new) %>
+<%= link "New course", to: user_course_path(@conn, :new, @user) %>

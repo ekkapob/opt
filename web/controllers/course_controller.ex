@@ -3,6 +3,7 @@ defmodule Opt.CourseController do
 
   alias Opt.Course
 
+  plug :assign_user
   plug :scrub_params, "course" when action in [:create, :update]
 
   def index(conn, _params) do
@@ -22,7 +23,7 @@ defmodule Opt.CourseController do
       {:ok, _course} ->
         conn
         |> put_flash(:info, "Course created successfully.")
-        |> redirect(to: course_path(conn, :index))
+        |> redirect(to: user_course_path(conn, :index, conn.assigns[:user]))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -47,7 +48,7 @@ defmodule Opt.CourseController do
       {:ok, course} ->
         conn
         |> put_flash(:info, "Course updated successfully.")
-        |> redirect(to: course_path(conn, :show, course))
+        |> redirect(to: user_course_path(conn, :show, conn.assigns[:user]))
       {:error, changeset} ->
         render(conn, "edit.html", course: course, changeset: changeset)
     end
@@ -62,6 +63,12 @@ defmodule Opt.CourseController do
 
     conn
     |> put_flash(:info, "Course deleted successfully.")
-    |> redirect(to: course_path(conn, :index))
+    |> redirect(to: user_course_path(conn, :index, conn.assigns[:user]))
   end
+
+  defp assign_user(conn, %{"user_id" => user_id}) do
+    user = Repo.get(Opt.User, user_id)
+    assign(conn, :user, user)
+  end
+
 end

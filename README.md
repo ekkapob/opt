@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> Notice that the third argument changes to the top level of our nested resource, and each additional resource follows in order. 
+-> We need to give ourselves to work with for messing around with these queries
