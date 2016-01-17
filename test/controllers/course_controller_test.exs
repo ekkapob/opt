@@ -27,8 +27,6 @@ defmodule Opt.CourseControllerTest do
   test "creates resource and redirects when data is valid", %{conn: conn,
     user: user} do
     conn = post conn, user_course_path(conn, :create, user), course: @valid_attrs
-    IO.inspect user_course_path(conn, :index, user)
-    IO.inspect redirected_to(conn)
     assert redirected_to(conn) == user_course_path(conn, :index, user)
     assert Repo.get_by(assoc(user, :courses), @valid_attrs)
   end
@@ -78,6 +76,25 @@ defmodule Opt.CourseControllerTest do
     conn = delete conn, user_course_path(conn, :delete, user, course)
     assert redirected_to(conn) == user_course_path(conn, :index, user)
     refute Repo.get(Course, course.id)
+  end
+
+  test "redirects when the specified user does not exist", %{conn: conn} do
+    conn = get conn, user_course_path(conn, :index, -1)
+    assert get_flash(conn, :error) == "Invalid user!"
+    assert redirected_to(conn) == page_path(conn, :index)
+    assert conn.halted
+  end
+
+  test "redirects when trying to edit a post for a different user",
+    %{conn: conn, user: user} do
+    other_user = User.changeset(%User{}, %{email: "test2@test.com",
+      username: "test2", password: "test", password_confirmation: "test"})
+    |> Repo.insert!
+    course = build_course(user)
+    conn = get conn, user_course_path(conn, :edit, other_user, course)
+    assert get_flash(conn, :error) =~ "not authorized"
+    assert redirected_to(conn) == page_path(conn, :index)
+    assert conn.halted
   end
 
   defp create_user do

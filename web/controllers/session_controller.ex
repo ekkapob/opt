@@ -22,6 +22,13 @@ defmodule Opt.SessionController do
     failed_login(conn)
   end
 
+  def delete(conn, _params) do
+    conn
+      |> delete_session(:current_user)
+      |> put_flash(:info, "Signed out successfully!")
+      |> redirect(to: page_path(conn, :index))
+  end
+
   defp failed_login(conn) do
     conn
     |> put_session(:current_user, nil)

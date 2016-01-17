@@ -50,7 +50,6 @@ defmodule Opt.CourseController do
   def update(conn, %{"id" => id, "course" => course_params}) do
     course = Repo.get!(assoc(conn.assigns[:user], :courses), id)
     changeset = Course.changeset(course, course_params)
-    IO.inspect changeset
 
     case Repo.update(changeset) do
       {:ok, course} ->

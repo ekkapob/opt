@@ -21,7 +21,7 @@ defmodule Opt.Router do
     resources "/users", UserController do
       resources "/courses", CourseController
     end
-    resources "/sessions", SessionController, only: [:new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 
   # Other scopes may use custom stacks.

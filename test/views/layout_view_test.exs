@@ -4,9 +4,10 @@ defmodule Opt.LayoutViewTest do
   alias Opt.User
 
   setup do
+    Repo.delete_all(User)
     User.changeset(%User{}, %{username: "test", password: "test",
       password_confirmation: "test", email: "test@test.com"})
-    |> Repo.insert
+    |> Repo.insert_or_update
     conn = conn()
     {:ok, conn: conn}
   end
