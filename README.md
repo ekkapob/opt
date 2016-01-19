@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> We need to give ourselves to work with for messing around with these queries
+-> In our Posts Controller, we ended up creating a lot of helper functions

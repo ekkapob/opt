@@ -2,16 +2,19 @@ defmodule Opt.CourseControllerTest do
   use Opt.ConnCase
 
   alias Opt.Course
-  alias Opt.User
+  alias Opt.TestHelper
 
   @valid_attrs %{body: "some content", title: "some content"}
   @invalid_attrs %{}
 
   setup do
-    {:ok, user} = create_user
-    conn = conn()
-    |> login_user(user)
-    {:ok, conn: conn, user: user}
+    {:ok, role} = TestHelper.create_role(%{name: "User Role", admin: false})
+    {:ok, user} = TestHelper.create_user(role, %{email: "test@test.com",
+      username: "testuser", password: "test", password_confirmation: "test"})
+    {:ok, course} = TestHelper.create_course(user, %{title: "Test Course",
+      body: "Test Body"})
+    conn = conn() |> login_user(user)
+    {:ok, conn: conn, user: user, role: role, course: course}
   end
 
   test "lists all entries on index", %{conn: conn, user: user} do
@@ -37,8 +40,7 @@ defmodule Opt.CourseControllerTest do
     assert html_response(conn, 200) =~ "New course"
   end
 
-  test "shows chosen resource", %{conn: conn, user: user} do
-    course = build_course(user)
+  test "shows chosen resource", %{conn: conn, user: user, course: course} do
     conn = get conn, user_course_path(conn, :show, user, course)
     assert html_response(conn, 200) =~ "Show course"
   end
@@ -49,30 +51,28 @@ defmodule Opt.CourseControllerTest do
     end
   end
 
-  test "renders form for editing chosen resource", %{conn: conn, user: user} do
-    course = build_course(user)
+  test "renders form for editing chosen resource", %{conn: conn, user: user,
+    course: course} do
     conn = get conn, user_course_path(conn, :edit, user, course)
     assert html_response(conn, 200) =~ "Edit course"
   end
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn,
-    user: user} do
-    course = build_course(user)
-    conn = put conn, user_course_path(conn, :update, user, course), course: @valid_attrs
+    user: user, course: course} do
+    conn = put conn, user_course_path(conn, :update, user, course),
+      course: @valid_attrs
     assert redirected_to(conn) == user_course_path(conn, :show, user, course)
     assert Repo.get_by(Course, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid",
-    %{conn: conn, user: user} do
-    course = build_course(user)
+    %{conn: conn, user: user, course: course} do
     conn = put conn, user_course_path(conn, :update, user, course),
       course: %{"body" => nil}
     assert html_response(conn, 200) =~ "Edit course"
   end
 
-  test "deletes chosen resource", %{conn: conn, user: user} do
-    course = build_course(user)
+  test "deletes chosen resource", %{conn: conn, user: user, course: course} do
     conn = delete conn, user_course_path(conn, :delete, user, course)
     assert redirected_to(conn) == user_course_path(conn, :index, user)
     refute Repo.get(Course, course.id)
@@ -86,21 +86,13 @@ defmodule Opt.CourseControllerTest do
   end
 
   test "redirects when trying to edit a post for a different user",
-    %{conn: conn, user: user} do
-    other_user = User.changeset(%User{}, %{email: "test2@test.com",
+    %{conn: conn, role: role, course: course} do
+    {:ok, other_user} = TestHelper.create_user(role, %{email: "test2@test.com",
       username: "test2", password: "test", password_confirmation: "test"})
-    |> Repo.insert!
-    course = build_course(user)
     conn = get conn, user_course_path(conn, :edit, other_user, course)
     assert get_flash(conn, :error) =~ "not authorized"
     assert redirected_to(conn) == page_path(conn, :index)
     assert conn.halted
-  end
-
-  defp create_user do
-    User.changeset(%User{}, %{email: "test@test.com", username: "test",
-      password: "test", password_confirmation: "test"})
-    |> Repo.insert
   end
 
   defp login_user(conn, user) do
@@ -108,11 +100,4 @@ defmodule Opt.CourseControllerTest do
       password: user.password}
   end
 
-  defp build_course(user) do
-    changeset =
-      user
-      |> build(:courses)
-      |> Course.changeset(@valid_attrs)
-    Repo.insert!(changeset)
-  end
 end

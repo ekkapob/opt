@@ -7,6 +7,7 @@ defmodule Opt.User do
     field :email, :string
     field :password_digest, :string
     has_many :courses, Opt.Course
+    belongs_to :role, Opt.Role
 
     timestamps
 
@@ -15,7 +16,7 @@ defmodule Opt.User do
     field :password_confirmation, :string, virtual: true
   end
 
-  @required_fields ~w(username email password password_confirmation)
+  @required_fields ~w(username email password password_confirmation role_id)
   @optional_fields ~w()
 
   @doc """
