@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> In our Posts Controller, we ended up creating a lot of helper functions
+-> And at the bottom we’ll add a few private functions to handle authorizing users and authorizing admins.

@@ -4,6 +4,8 @@ defmodule Opt.UserController do
   alias Opt.User
 
   plug :scrub_params, "user" when action in [:create, :update]
+  plug :authorize_admin when action in [:new, :create]
+  plug :authorize_user action in [:edit, :update, :delete]
 
   def index(conn, _params) do
     users = Repo.all(User)
