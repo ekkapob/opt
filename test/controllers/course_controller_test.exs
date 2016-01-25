@@ -59,7 +59,12 @@ defmodule Opt.CourseControllerTest do
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn,
     user: user, course: course} do
-    conn = put conn, user_course_path(conn, :update, user, course),
+    {:ok, role} = TestHelper.create_role(%{name: "Admin", admin: true})
+    {:ok, admin} = TestHelper.create_user(role, %{username: "admin",
+      email: "admin@test.com", password: "test", password_confirmation: "test"})
+    conn =
+      login_user(conn, admin)
+      |> put user_course_path(conn, :update, user, course),
       course: @valid_attrs
     assert redirected_to(conn) == user_course_path(conn, :show, user, course)
     assert Repo.get_by(Course, @valid_attrs)
