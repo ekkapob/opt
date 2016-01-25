@@ -17,10 +17,19 @@ defmodule Opt.UserControllerTest do
   @invalid_attrs %{}
 
   setup do
-    conn = conn()
     {:ok, user_role} = TestHelper.create_role(%{name: "user", admin: false})
+    {:ok, noadmin_user} = TestHelper.create_user(user_role, %{email:
+      "noadmin@test.com", username: "noadmin", password: "test",
+      password_confirmation: "test"})
+
     {:ok, admin_role} = TestHelper.create_role(%{name: "admin", admin: true})
-    {:ok, conn: conn, user_role: user_role, admin_role: admin_role}
+    {:ok, admin_user} = TestHelper.create_user(admin_role, %{email:
+      "admin@test.com", username: "admin", password: "test",
+      password_confirmation: "test"})
+
+    conn = conn()
+    {:ok, conn: conn, user_role: user_role, admin_role: admin_role,
+      noadmin_user: noadmin_user, admin_user: admin_user}
   end
 
   test "lists all entries on index", %{conn: conn} do
@@ -28,7 +37,9 @@ defmodule Opt.UserControllerTest do
     assert html_response(conn, 200) =~ "Listing users"
   end
 
-  test "renders form for new resources", %{conn: conn} do
+  @tag admin: true
+  test "renders form for new resources", %{conn: conn, admin_user: admin_user} do
+    conn = login_user(conn, admin_user)
     conn = get conn, user_path(conn, :new)
     assert html_response(conn, 200) =~ "New user"
   end
@@ -103,5 +114,10 @@ defmodule Opt.UserControllerTest do
 
   defp valid_create_attrs(role) do
     Map.put(@valid_create_attrs, :role_id, role.id)
+  end
+
+  defp login_user(conn, user) do
+    post conn, session_path(conn, :create), user: %{username: user.username,
+      password: user.password}
   end
 end

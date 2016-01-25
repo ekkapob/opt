@@ -80,4 +80,16 @@ defmodule Opt.UserController do
       |> halt()
     end
   end
+
+  defp authorize_admin(conn, _) do
+    user = get_session(conn, :current_user)
+    if user && Opt.RoleChecker.is_admin?(user) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not authorized to create new users!")
+      |> redirect(to: page_path(conn, :index))
+      |> halt()
+    end
+  end
 end

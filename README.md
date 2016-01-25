@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> The authorize_user call is basically identical to what we have in our Post Controller, 
+-> Green again! Now, we need to create a negative test for when a user is not an admin but tries to visit the “new” action for Users.
