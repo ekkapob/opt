@@ -19,4 +19,4 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Source: https://github.com/phoenixframework/phoenix
 
 Continue
--> Green again! Now, we need to create a negative test for when a user is not an admin but tries to visit the “new” action for Users.
+-> We added a decent amount of code here, so let’s discuss what we’re doing. 
