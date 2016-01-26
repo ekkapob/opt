@@ -24,12 +24,14 @@ defmodule Opt.Course do
     |> strip_unsafe_body(params)
   end
 
-  defp strip_unsafe_body(model, %{"body" =>  nil) do
+  defp strip_unsafe_body(model, %{"body" =>  nil}) do
     model
   end
 
-  defp strip_unsafe_body(model, %{"body" =>  model) do
-    model |> put_change(:body, strip_tags(body))
+  defp strip_unsafe_body(model, %{"body" =>  body}) do
+    # model |> put_change(:body, strip_tags(body))
+    {:safe, clean_body} = Phoenix.HTML.html_escape(body)
+    model |> put_change(:body, clean_body)
   end
 
   defp strip_unsafe_body(model, _) do

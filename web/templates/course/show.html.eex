@@ -9,7 +9,7 @@
 
   <li>
     <strong>Body:</strong>
-    <%= @course.body %>
+    <%= markdown(@course.body) %>
   </li>
 
 </ul>
